@@ -1,4 +1,8 @@
+
+Summarize
 Inventory Bottles 100
+Purchase Craig Bottles 50
+Purchase Ann Bottles 0
 Inventory Rattles 50
 Inventory Diapers 200
 
