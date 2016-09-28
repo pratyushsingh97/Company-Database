@@ -19,7 +19,7 @@
 #define NEW_CUSTOMER -1
 #define INVALID_PURCH 0
 #define VALID_PURCH 1
-
+#define NO_PURCH 0
 //global variables
 Customer Inventory;
 Customer customers[MAX_CUSTOMERS];
@@ -48,13 +48,11 @@ int mostRattles();
 */  
 void reset(void) 
 {
-	/* your code here */
-    //StringDestroy(&name);
-    //StringDestroy(&prod);
-    for(int x = 0; x < num_customers; x++)
-    {
+    //clear all string variables stored
+    for(int x = 0; x < num_customers; x++) {
         StringDestroy(&(customers[x].name));
     }
+
     init();
     Inventory.bottles = 0;
     Inventory.rattles = 0;
@@ -73,8 +71,8 @@ void processSummarize()
 {
     //print out the number of items remaining in inventory
     printf("There are ");
-    printf("%d Bottles, %d Diapers, and %d Rattles remaining in the inventory \n", Inventory.bottles, Inventory.diapers, Inventory.rattles);
-    printf("We have had a total of %d different customers \n", num_customers);
+    printf("%d Bottles, %d Diapers, and %d Rattles in inventory \n", Inventory.bottles, Inventory.diapers, Inventory.rattles);
+    printf("we have had a total of %d different customers \n", num_customers);
 
     /*calls mostDiapers, mostRattles, and mostBottles to see the index 
      * of the customer who purchased the most of each product */
@@ -91,7 +89,7 @@ void processSummarize()
     //print the customer name who has purchased the most of that specific prodcut
     else {
         StringPrint(&(customers[most_bottles].name));
-        printf(" has purchased the most bottles (%d)\n", customers[most_bottles].bottles);
+        printf(" has purchased the most Bottles (%d)\n", customers[most_bottles].bottles);
    }
 
     if(most_diapers == -1) {
@@ -100,7 +98,7 @@ void processSummarize()
 
     else {
         StringPrint(&(customers[most_diapers].name));
-        printf(" has purchased the most diapers (%d)\n", customers[most_diapers].diapers);
+        printf(" has purchased the most Diapers (%d)\n", customers[most_diapers].diapers);
     }
 
     if(most_rattles == -1){
@@ -109,8 +107,10 @@ void processSummarize()
 
     else{
         StringPrint(&(customers[most_rattles].name));
-        printf(" has purchased the most rattles (%d)\n", customers[most_rattles].rattles);
+        printf(" has purchased the most Rattles (%d)\n", customers[most_rattles].rattles);
     }
+
+    printf("\n");
 
 
 }
@@ -132,11 +132,9 @@ void processPurchase()
 	}
 
     //get name of customer
-	//String name;
 	readString(&name);
     
     //get product that the customer has bought
-	//String prod;
 	readString(&prod); 
     
     //get the amount of product the customer wants to buy
@@ -148,13 +146,20 @@ void processPurchase()
 	int valid = check(&prod, amount);
 	if(valid == INVALID_PURCH || amount == 0) {
 
+        if(amount == 0) {
+            printf("Sorry ");
+            StringPrint(&name);
+            printf(" you must purchase something!\n");
+
+        }
+
         switch(item(&prod)){
                 case BOTTLES:
                 printf("Sorry ");
                 StringPrint(&name);
-                printf(", We only have %d ", Inventory.bottles);
+                printf(", we only have %d ", Inventory.bottles);
                 StringPrint(&prod);
-                printf("left\n");
+                printf("\n");
                 StringDestroy(&name);
                 StringDestroy(&prod);
                 break;
@@ -162,9 +167,9 @@ void processPurchase()
                 case DIAPERS:
                 printf("Sorry ");
                 StringPrint(&name);
-                printf(", We only have %d ", Inventory.diapers);
+                printf(", we only have %d ", Inventory.diapers);
                 StringPrint(&prod);
-                printf("left\n");
+                printf("\n");
                 StringDestroy(&name);
                 StringDestroy(&prod);
                 break;
@@ -172,9 +177,9 @@ void processPurchase()
                 case RATTLES:
                 printf("Sorry ");
                 StringPrint(&name);
-                printf(", We only have %d ", Inventory.rattles);
+                printf(", we only have %d ", Inventory.rattles);
                 StringPrint(&prod);
-                printf("left\n");
+                printf("\n");
                 StringDestroy(&name);
                 StringDestroy(&prod);
                 break;
@@ -182,19 +187,15 @@ void processPurchase()
                 default:
                 puts("Invalid input");
             }
-        //StringDestroy(&name);
-        //StringDestroy(&prod);
+
 		return;
 	}
     //if first customer to database, then add customer to database
 	if(num_customers == 0) {
-            //fix this 
+            
              customers[0].name = StringDup(&name);
-            //copyChars(customers[0].name.ptr, name.ptr, name.len);
 
-			//StringReAssign(&(customers[0].name), &name);
-
-            switch(item(&prod)){
+            switch(item(&prod)) {
             	case BOTTLES:
             	customers[0].bottles = amount;
             	Inventory.bottles = Inventory.bottles - amount;
@@ -225,14 +226,12 @@ void processPurchase()
        
     /* if not first customer to database, then search and sort to see 
      * if customer is a new customer or an existing customer */ 
-	sort(num_customers);
+	//sort(num_customers);
 	int index = search(&name);
 
     //if new customer then add new customer to the customer database
     if(index == NEW_CUSTOMER) {
         customers[num_customers].name = StringDup(&name); 
-
-    	//StringReAssign(&(customers[num_customers].name), &name);
 
     	switch(item(&prod)) {
             	case BOTTLES:
@@ -257,7 +256,7 @@ void processPurchase()
       num_customers++;  
 
       //re-sort customers database to take into account new customer
-      sort(num_customers);
+      //sort(num_customers);
 
       //destroy variables created on heap
       StringDestroy(&name);
@@ -344,7 +343,7 @@ void processInventory()
 
 }
 
-//remember to destroy request
+
 /** item(String* request)
  * helper function that returns 0, 1, 2 
  * depending on if the product is bottles, diapers, or rattles
@@ -380,6 +379,7 @@ int item(String* request)
     StringDestroy(&bottles);
     StringDestroy(&diapers);
     StringDestroy(&rattles);
+
 	return out;
 }
 
@@ -424,70 +424,80 @@ void swap(int min, int index)
 	customers[index] = temp;
 }
 
-//remember to destroy name
+
 /** search(int min, int index)
- * a helper binary serach function that determines if customer is a new
+ * a helper binary search function that determines if customer is a new
  * customer or an existing one
- * [INPUT]
+ * [INPUT] a pointer to a String object
+ * [OUTPUT] whether or not the string was found in the array
  */
 int search(String* name)
 {
-	int low = 0;
+    for(int x = 0; x < num_customers; x++){
+        if(StringIsEqualTo(&(customers[x].name), name))
+        {
+            return x;
+        }
+    }
+    return NEW_CUSTOMER;
+
+	/*int low = 0;
 	int mid = 0;
 	int high = num_customers - 1;
 
-	while(low <= high)
-	{
+	while(low <= high) {
 		mid = (low + high)/2;
-		if(StringIsLessThan(&(customers[mid].name), name))
-		{
+		if(StringIsLessThan(&(customers[mid].name), name)) {
 			low = mid + 1;
 		}
-		else if(StringIsEqualTo(&(customers[mid].name), name))
-		{
+		else if(StringIsEqualTo(&(customers[mid].name), name)) {
 			return mid;
 		}
-		else if(StringIsLessThan(name, &(customers[mid].name)))
-		{
+		else if(StringIsLessThan(name, &(customers[mid].name))) {
 			high = mid - 1;
             if(high < 0)
                 break;
 		}
 	}
-	return NEW_CUSTOMER;
+	return NEW_CUSTOMER;*/
 }
 
+/** init()
+ * a helper function that clears customer database
+ * [INPUT] none
+ * [OUTPUT] none
+ */
 void init()
 {
-	for (int i = 0; i < MAX_CUSTOMERS; ++i)
-	{
+	for (int i = 0; i < MAX_CUSTOMERS; ++i) {
 		customers[i].bottles = 0;
 		customers[i].rattles = 0;
 		customers[i].diapers = 0;
 	}
 }
 
-//remember to destroy product
+/** check(String* product, int amount)
+ * a helper function that checks to see if it is a valid purchase 
+ * [INPUT] a String pointer to the product and the amount of product purchased
+ * [OUTPUT] a macro VALID_PURCH for valid purchases or INVALID_PURCH for invalid purchases
+ */
 int check(String* product, int amount)
 {
 	switch(item(product)){
 		case BOTTLES:
-			if(amount > Inventory.bottles)
-			{
+			if(amount > Inventory.bottles) {
 				return INVALID_PURCH;
 			}
 			return VALID_PURCH;
 
 		case DIAPERS:
-			if(amount > Inventory.diapers)
-			{
+			if(amount > Inventory.diapers) {
 				return INVALID_PURCH;
 			}
 			return VALID_PURCH;
 
 		case RATTLES:
-			if(amount > Inventory.rattles)
-			{
+			if(amount > Inventory.rattles) {
 				return INVALID_PURCH;
 			}
 
@@ -497,41 +507,55 @@ int check(String* product, int amount)
 	}   	
 }
 
-int mostBottles(){
+/** mostBottles()
+ * a helper function that finds the index of maxbottles, returns -1 if no one purchased 
+ * [INPUT] none
+ * [OUTPUT] returns index of customer who purchased most bottles
+ */
+int mostBottles() 
+{
     int max = customers[0].bottles;
     int index = 0;
     for(int x = 0; x < num_customers; x++){
-        if(customers[x].bottles > max)
-        {
+        if(customers[x].bottles > max) {
             max = customers[x].bottles;
             index = x;
         }
     }
-  if(max == 0)
-  {
+  if(max == 0) {
     return -1;
   } 
   return index;
 }
 
-int mostDiapers(){
+/** mostDiapers()
+ * a helper function that finds the index of maxdiapers, returns -1 if no one purchased 
+ * [INPUT] none
+ * [OUTPUT] returns index of customer who purchased most diapers
+ */
+int mostDiapers() 
+{
     int max = customers[0].diapers;
     int index = 0;
-    for(int x = 0; x < num_customers; x++){
-        if(customers[x].diapers > max)
-        {
+    for(int x = 0; x < num_customers; x++) {
+        if(customers[x].diapers > max) {
             max = customers[x].diapers;
             index = x;
         }
     }
-    if(max == 0)
-    {
+    if(max == 0) {
         return -1;
     } 
   return index;
 }
 
-int mostRattles(){
+/** mostBottles()
+ * a helper function that finds the index of maxbottles, returns -1 if no one purchased 
+ * [INPUT] none
+ * [OUTPUT] returns index of customer who purchased most bottles
+ */
+int mostRattles()
+ {
     int max = customers[0].rattles;
     int index = 0;
     for(int x = 0; x < num_customers; x++){
