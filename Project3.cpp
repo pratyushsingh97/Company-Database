@@ -3,7 +3,7 @@
  *
  * Name: Pratyush Singh
  * Class: EE312 Spring 2016
- * 
+ * USING  1 SLIP DAY!!
  */
 
 #include <stdio.h>
@@ -226,7 +226,7 @@ void processPurchase()
        
     /* if not first customer to database, then search and sort to see 
      * if customer is a new customer or an existing customer */ 
-	//sort(num_customers);
+	
 	int index = search(&name);
 
     //if new customer then add new customer to the customer database
@@ -254,9 +254,6 @@ void processPurchase()
             }
 
       num_customers++;  
-
-      //re-sort customers database to take into account new customer
-      //sort(num_customers);
 
       //destroy variables created on heap
       StringDestroy(&name);
@@ -426,7 +423,7 @@ void swap(int min, int index)
 
 
 /** search(int min, int index)
- * a helper binary search function that determines if customer is a new
+ * a helper linear search function that determines if customer is a new
  * customer or an existing one
  * [INPUT] a pointer to a String object
  * [OUTPUT] whether or not the string was found in the array
@@ -441,25 +438,6 @@ int search(String* name)
     }
     return NEW_CUSTOMER;
 
-	/*int low = 0;
-	int mid = 0;
-	int high = num_customers - 1;
-
-	while(low <= high) {
-		mid = (low + high)/2;
-		if(StringIsLessThan(&(customers[mid].name), name)) {
-			low = mid + 1;
-		}
-		else if(StringIsEqualTo(&(customers[mid].name), name)) {
-			return mid;
-		}
-		else if(StringIsLessThan(name, &(customers[mid].name))) {
-			high = mid - 1;
-            if(high < 0)
-                break;
-		}
-	}
-	return NEW_CUSTOMER;*/
 }
 
 /** init()
@@ -537,16 +515,30 @@ int mostDiapers()
 {
     int max = customers[0].diapers;
     int index = 0;
+
+    //find max
     for(int x = 0; x < num_customers; x++) {
         if(customers[x].diapers > max) {
             max = customers[x].diapers;
-            index = x;
+            //index = x;
         }
     }
+
+    //product hasnt been purchased yet
     if(max == 0) {
         return -1;
+    }
+
+    //return the first customer who has max
+    else {
+        for(int x = 0; x < num_customers; x++) {
+            if(customers[x].diapers == max) {
+                index = x;
+                return index;
+            }
+        }
     } 
-  return index;
+  return 0;
 }
 
 /** mostBottles()

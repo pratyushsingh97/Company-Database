@@ -1,28 +1,13 @@
 
-Summarize
 Inventory Bottles 100
-Purchase Craig Bottles 50
-Purchase Ann Bottles 0
 Inventory Rattles 50
 Inventory Diapers 200
 
-Purchase Craig Bottles 4
-Purchase Craig Diapers 100
+Purchase Craig Bottles 5
+Purchase Sue Bottles 7
+Summarize
+Purchase Craig Bottles 2
 
-Purchase Billy Diapers 100
-
-Purchase Sue Diapers 50
-Purchase Sue Bottles 10
-
-Inventory Diapers 200
-Purchase Sue Diapers 150
-Purchase Sue Rattles 60
-Purchase Craig Diapers 20
-Purchase Craig Bottles 8
-
-Purchase Billy Rattles 10
-
-Purchase Johnny Rattles 100
 
 
 Summarize
