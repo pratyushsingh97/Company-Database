@@ -45,7 +45,7 @@ This command will create a new customer record under Paul and record that Paul h
 
 In this example, the amount of diapers in the inventory will automatically be reduced by 10.
 
-###**Getting Summary of Inventory and Customers
+###**Getting Summary of Inventory and Customers**
 
 This command will automatically return the amount of product left in the Inventory and which customers have purchased the most of each item.
 
